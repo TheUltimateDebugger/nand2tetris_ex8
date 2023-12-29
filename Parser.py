@@ -106,6 +106,19 @@ class Parser:
             return "C_PUSH"
         elif first_arg == "pop":
             return "C_POP"
+        elif first_arg == "if-goto":
+            return "C-IF"
+        elif first_arg == "goto":
+            return "C_GOTO"
+        elif first_arg == "function":
+            return "C_FUNCTION"
+        elif first_arg == "return":
+            return "C_RETURN"
+        elif first_arg == "call":
+            return "C_CALL"
+        elif first_arg == "label":
+            return "C_LABEL"
+
 
 
 
