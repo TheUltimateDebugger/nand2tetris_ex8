@@ -23,6 +23,7 @@ class CodeWriter:
         self.label_counter = 0
         self.output_stream = output_stream
         self.input_filename = ""
+        self.current_function_name = ""
 
     def set_file_name(self, filename: str) -> None:
         """Informs the code writer that the translation of a new VM file is 
@@ -404,7 +405,7 @@ class CodeWriter:
         """
         # This is irrelevant for project 7,
         # you will implement this in project 8!
-        pass
+        self.output_stream.write(f"({self.current_function_name}${label}\n")
 
     def write_goto(self, label: str) -> None:
         """Writes assembly code that affects the goto command.
@@ -414,7 +415,9 @@ class CodeWriter:
         """
         # This is irrelevant for project 7,
         # you will implement this in project 8!
-        pass
+        self.output_stream.write(f"@{self.current_function_name}${label}\n")
+        self.output_stream.write("0;JMP\n")
+
 
     def write_if(self, label: str) -> None:
         """Writes assembly code that affects the if-goto command. 
@@ -424,7 +427,12 @@ class CodeWriter:
         """
         # This is irrelevant for project 7,
         # you will implement this in project 8!
-        pass
+        self.output_stream.write("@SP\n"
+                                 "M=M-1\n"
+                                 "A=M\n"
+                                 "D=M\n")
+        self.output_stream.write(f"@{self.current_function_name}${label}\n")
+        self.output_stream.write("D;JNE\n")
 
     def write_function(self, function_name: str, n_vars: int) -> None:
         """Writes assembly code that affects the function command. 
@@ -444,6 +452,8 @@ class CodeWriter:
         # (function_name)       // injects a function entry label into the code
         # repeat n_vars times:  // n_vars = number of local variables
         #   push constant 0     // initializes the local variables to 0
+        self.current_function_name = function_name
+
         pass
 
     def write_call(self, function_name: str, n_args: int) -> None:
