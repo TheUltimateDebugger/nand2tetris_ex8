@@ -491,7 +491,8 @@ class CodeWriter:
         # (return_address)      // injects the return address label into the code
 
         # push return address
-        self.output_stream.write(f"@THE LABEL"
+        self.output_stream.write(f"@THE LABEL\n"
+                                 "D=A\n"
                                  "@SP\n"
                                  "A=M\n"
                                  "M=D\n"
