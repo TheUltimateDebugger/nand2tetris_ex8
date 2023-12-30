@@ -27,6 +27,8 @@ def translate_file(
     parser = Parser(input_file)
     code_writer = CodeWriter(output_file)
     code_writer.set_file_name(input_filename)
+    if bootstrap:
+        code_writer.bootstrap()
     while True:
         output_file.write(f'//{parser.get_cmd()}\n')
         cmd_type = parser.command_type()
@@ -86,7 +88,7 @@ if "__main__" == __name__:
         files_to_translate = [argument_path]
         output_path, extension = os.path.splitext(argument_path)
     output_path += ".asm"
-    bootstrap = False
+    bootstrap = True
     with open(output_path, 'w') as output_file:
         for input_path in files_to_translate:
             filename, extension = os.path.splitext(input_path)

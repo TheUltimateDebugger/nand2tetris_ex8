@@ -26,6 +26,15 @@ class CodeWriter:
         self.current_function_name = ""
         self.return_counter = 0
 
+    def bootstrap(self):
+        self.output_stream.write(f"@256\n"
+                                 f"D=A\n"
+                                 f"@SP\n"
+                                 f"M=D\n")
+        self.write_call("Sys.init", 0)
+
+
+
     def set_file_name(self, filename: str) -> None:
         """Informs the code writer that the translation of a new VM file is 
         started.
