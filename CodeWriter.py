@@ -456,7 +456,7 @@ class CodeWriter:
         self.return_counter = 0
         self.current_function_name = function_name
         # injects function name
-        self.write_label("")
+        self.output_stream.write(f"({self.current_function_name}\n")
         # push constant 0 n_vars times
         for i in range(n_vars):
             self.write_push_pop("C_PUSH", "constant", 0)
