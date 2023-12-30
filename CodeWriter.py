@@ -631,6 +631,7 @@ class CodeWriter:
                                  f"M=D\n")
         # goto return_address
         self.output_stream.write(f"@R14\n"
+                                 "A=M\n"
                                  f"0;JMP\n")
 
 
