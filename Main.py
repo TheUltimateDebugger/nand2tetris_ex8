@@ -52,7 +52,7 @@ def translate_file(
             code_writer.write_function(func_name, func_local)
         elif cmd_type == "C_RETURN":
             code_writer.c()
-        elif cmd_type == "C_CALL"
+        elif cmd_type == "C_CALL":
             func_name = parser.arg1()
             arg_num = parser.arg2()
             code_writer.write_call(func_name, arg_num)
