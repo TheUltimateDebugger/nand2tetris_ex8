@@ -107,7 +107,7 @@ class Parser:
         elif first_arg == "pop":
             return "C_POP"
         elif first_arg == "if-goto":
-            return "C-IF"
+            return "C_IF"
         elif first_arg == "goto":
             return "C_GOTO"
         elif first_arg == "function":
