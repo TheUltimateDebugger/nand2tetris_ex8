@@ -86,7 +86,7 @@ if "__main__" == __name__:
         files_to_translate = [argument_path]
         output_path, extension = os.path.splitext(argument_path)
     output_path += ".asm"
-    bootstrap = True
+    bootstrap = False
     with open(output_path, 'w') as output_file:
         for input_path in files_to_translate:
             filename, extension = os.path.splitext(input_path)

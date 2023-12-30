@@ -1,5 +1,5 @@
 #!/bin/sh
-# This file only works on Unix-like operating systems, so it won't work on Windows.
+#This file only works on Unix-like operating systems, so it won't work on Windows.
 
 ## Why do we need this file?
 # The purpose of this file is to run your project.
