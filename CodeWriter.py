@@ -405,7 +405,7 @@ class CodeWriter:
         """
         # This is irrelevant for project 7,
         # you will implement this in project 8!
-        self.output_stream.write(f"({self.current_function_name}${label}\n")
+        self.output_stream.write(f"({self.current_function_name}${label})\n")
 
     def write_goto(self, label: str) -> None:
         """Writes assembly code that affects the goto command.
@@ -417,7 +417,6 @@ class CodeWriter:
         # you will implement this in project 8!
         self.output_stream.write(f"@{self.current_function_name}${label}\n")
         self.output_stream.write("0;JMP\n")
-
 
     def write_if(self, label: str) -> None:
         """Writes assembly code that affects the if-goto command. 
@@ -452,9 +451,13 @@ class CodeWriter:
         # (function_name)       // injects a function entry label into the code
         # repeat n_vars times:  // n_vars = number of local variables
         #   push constant 0     // initializes the local variables to 0
-        self.current_function_name = function_name
 
-        pass
+        self.current_function_name = function_name
+        # injects function name
+        self.write_label(function_name)
+        # push constant 0 n_vars times
+        for i in range(n_vars):
+            self.write_push_pop("C_PUSH", "constant", 0)
 
     def write_call(self, function_name: str, n_args: int) -> None:
         """Writes assembly code that affects the call command. 
@@ -484,7 +487,78 @@ class CodeWriter:
         # LCL = SP              // repositions LCL
         # goto function_name    // transfers control to the callee
         # (return_address)      // injects the return address label into the code
-        pass
+
+        # makes space for the return address
+        self.write_push_pop("C_PUSH", "constant", 0)
+
+        # push local
+        self.output_stream.write("@LCL\n"
+                                 "D=M\n"
+                                 "@SP\n"
+                                 "A=M\n"
+                                 "M=D\n"
+                                 "@SP\n"
+                                 "M=M+1\n")
+        # push args
+        self.output_stream.write("@ARG\n"
+                                 "D=M\n"
+                                 "@SP\n"
+                                 "A=M\n"
+                                 "M=D\n"
+                                 "@SP\n"
+                                 "M=M+1\n")
+        # push this
+        self.output_stream.write("@THIS\n"
+                                 "D=M\n"
+                                 "@SP\n"
+                                 "A=M\n"
+                                 "M=D\n"
+                                 "@SP\n"
+                                 "M=M+1\n")
+        # push that
+        self.output_stream.write("@THAT\n"
+                                 "D=M\n"
+                                 "@SP\n"
+                                 "A=M\n"
+                                 "M=D\n"
+                                 "@SP\n"
+                                 "M=M+1\n")
+
+        # ARG = SP - 5 - n_args
+        self.output_stream.write("@SP\n"
+                                 "D=M\n"
+                                 f"@{n_args}\n"
+                                 "D=D-A\n"
+                                 "@5\n"
+                                 "D=D-A\n"
+                                 "@ARG\n"
+                                 "M=D\n")
+
+        # LCL = SP
+        self.output_stream.write("@SP\n"
+                                 "D=M\n"
+                                 "@LCL\n"
+                                 "M=D\n")
+
+        # TODO understand what are the rules with self.current_function
+        self.write_goto()
+
+        # generates return address:
+        # TODO: understand how to make it work when calling the same function a few times
+        self.output_stream.write(f"(RETURN_TO_{self.current_function_name}{self.label_counter})\n")
+        self.label_counter += 1
+
+        # injects the return address in the stack
+        self.output_stream.write("@ARG\n"
+                                 "D=M\n"
+                                 f"@{n_args}\n"
+                                 "D=D+A\n"
+                                 "@R13\n"
+                                 "M=D\n"
+                                 f"@RETURN_TO_{self.current_function_name}{self.label_counter}\n"
+                                 "D=A\n"
+                                 "@R13\n"
+                                 "A=M\n")
 
     def c(self) -> None:
         """Writes assembly code that affects the return command."""
