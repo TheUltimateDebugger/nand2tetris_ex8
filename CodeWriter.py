@@ -456,7 +456,7 @@ class CodeWriter:
         self.return_counter = 0
         self.current_function_name = function_name
         # injects function name
-        self.write_label(function_name)
+        self.write_label("")
         # push constant 0 n_vars times
         for i in range(n_vars):
             self.write_push_pop("C_PUSH", "constant", 0)
@@ -491,13 +491,7 @@ class CodeWriter:
         # (return_address)      // injects the return address label into the code
 
         # push return address
-        self.output_stream.write(f"@THE LABEL\n"
-                                 "D=A\n"
-                                 "@SP\n"
-                                 "A=M\n"
-                                 "M=D\n"
-                                 "@SP\n"
-                                 "M=M+1\n")
+        self.output_stream.write(f"@{self.current_function_name}$ret.{self.return_counter}\n")
 
         # push local
         self.output_stream.write("@LCL\n"
@@ -548,12 +542,12 @@ class CodeWriter:
                                  "@LCL\n"
                                  "M=D\n")
 
-        # TODO understand what are the rules with self.current_function
+        # writes the jump
+        self.output_stream.write(f"@{function_name}\n")
+        self.output_stream.write("0;JMP\n")
 
-
-        # generates return address:
-        # TODO: understand how to make it work when calling the same function a few times
-        self.output_stream.write(f"(RETURN_TO_{self.current_function_name}{self.return_counter})\n")
+        # writes return address:
+        self.output_stream.write(f"({self.current_function_name}$ret.{self.return_counter})\n")
         self.return_counter += 1
 
     def c(self) -> None:
