@@ -24,6 +24,7 @@ class CodeWriter:
         self.output_stream = output_stream
         self.input_filename = ""
         self.current_function_name = ""
+        self.return_counter = 0
 
     def set_file_name(self, filename: str) -> None:
         """Informs the code writer that the translation of a new VM file is 
@@ -452,6 +453,7 @@ class CodeWriter:
         # repeat n_vars times:  // n_vars = number of local variables
         #   push constant 0     // initializes the local variables to 0
 
+        self.return_counter = 0
         self.current_function_name = function_name
         # injects function name
         self.write_label(function_name)
@@ -488,8 +490,13 @@ class CodeWriter:
         # goto function_name    // transfers control to the callee
         # (return_address)      // injects the return address label into the code
 
-        # makes space for the return address
-        self.write_push_pop("C_PUSH", "constant", 0)
+        # push return address
+        self.output_stream.write(f"@THE LABEL"
+                                 "@SP\n"
+                                 "A=M\n"
+                                 "M=D\n"
+                                 "@SP\n"
+                                 "M=M+1\n")
 
         # push local
         self.output_stream.write("@LCL\n"
@@ -541,24 +548,12 @@ class CodeWriter:
                                  "M=D\n")
 
         # TODO understand what are the rules with self.current_function
-        self.write_goto()
+
 
         # generates return address:
         # TODO: understand how to make it work when calling the same function a few times
-        self.output_stream.write(f"(RETURN_TO_{self.current_function_name}{self.label_counter})\n")
-        self.label_counter += 1
-
-        # injects the return address in the stack
-        self.output_stream.write("@ARG\n"
-                                 "D=M\n"
-                                 f"@{n_args}\n"
-                                 "D=D+A\n"
-                                 "@R13\n"
-                                 "M=D\n"
-                                 f"@RETURN_TO_{self.current_function_name}{self.label_counter}\n"
-                                 "D=A\n"
-                                 "@R13\n"
-                                 "A=M\n")
+        self.output_stream.write(f"(RETURN_TO_{self.current_function_name}{self.return_counter})\n")
+        self.return_counter += 1
 
     def c(self) -> None:
         """Writes assembly code that affects the return command."""
