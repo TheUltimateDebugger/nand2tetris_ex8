@@ -564,4 +564,76 @@ class CodeWriter:
         # ARG = *(frame-3)              // restores ARG for the caller
         # LCL = *(frame-4)              // restores LCL for the caller
         # goto return_address           // go to the return address
-        pass
+
+        # frame = LCL
+        self.output_stream.write(f"@LCL\n"
+                                 f"D=M\n"
+                                 f"@R13\n"
+                                 f"M=D\n")
+
+        # return_address = *(frame-5)
+        self.output_stream.write(f"@R13\n"
+                                 f"D=M\n"
+                                 f"@5\n"
+                                 f"D=D-A\n"
+                                 f"A=D\n"
+                                 f"D=M\n"
+                                 f"@R14\n"
+                                 f"M=D\n")
+        # *ARG = pop()
+        self.output_stream.write(f"@SP\n"
+                                 f"M=M-1\n"
+                                 f"A=M\n"
+                                 f"D=M\n"
+                                 f"@ARG\n"
+                                 f"A=M\n"
+                                 f"M=D\n")
+        # SP = ARG + 1
+        self.output_stream.write(f"@ARG\n"
+                                 f"D=M\n"
+                                 f"@SP\n"
+                                 f"M=D+1\n")
+        # THAT = *(frame-1)
+        self.output_stream.write(f"@R13\n"
+                                 f"D=M\n"
+                                 f"@1\n"
+                                 f"D=D-A\n"
+                                 f"A=D\n"
+                                 f"D=M\n"
+                                 f"@THAT\n"
+                                 f"M=D\n")
+        # THIS = *(frame-2)
+        self.output_stream.write(f"@R13\n"
+                                 f"D=M\n"
+                                 f"@2\n"
+                                 f"D=D-A\n"
+                                 f"A=D\n"
+                                 f"D=M\n"
+                                 f"@THIS\n"
+                                 f"M=D\n")
+        # ARG = *(frame-3)
+        self.output_stream.write(f"@R13\n"
+                                 f"D=M\n"
+                                 f"@3\n"
+                                 f"D=D-A\n"
+                                 f"A=D\n"
+                                 f"D=M\n"
+                                 f"@ARG\n"
+                                 f"M=D\n")
+        # LCL = *(frame-4)
+        self.output_stream.write(f"@R13\n"
+                                 f"D=M\n"
+                                 f"@4\n"
+                                 f"D=D-A\n"
+                                 f"A=D\n"
+                                 f"D=M\n"
+                                 f"@LCL\n"
+                                 f"M=D\n")
+        # goto return_address
+        self.output_stream.write(f"@R14\n"
+                                 f"0;JMP\n")
+
+
+
+
+
