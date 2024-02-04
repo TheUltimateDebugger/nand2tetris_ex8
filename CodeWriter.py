@@ -96,10 +96,10 @@ class CodeWriter:
                                      "M=M-1\n"
                                      "A=M-1\n"
                                      "D=D-M\n"
-                                     f"@TRUE{self.label_counter}\n"
+                                     f"@TRUE{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JEQ\n"
                                      "D=-1\n"
-                                     f"(TRUE{self.label_counter})\n"
+                                     f"(TRUE{self.current_function_name+str(self.label_counter)})\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=!D\n")
@@ -117,50 +117,50 @@ class CodeWriter:
                                      "D=M\n"
                                      "@R13\n"
                                      "M=D\n"
-                                     f"@FIRST_POS{self.label_counter}\n"
+                                     f"@FIRST_POS{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JGE\n"
 
 
-                                     f"(FIRST_NEG{self.label_counter})\n"
+                                     f"(FIRST_NEG{self.current_function_name+str(self.label_counter)})\n"
                                      "@R14\n"
                                      "D=M\n"
-                                     f"@SECOND{self.label_counter}\n"
+                                     f"@SECOND{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JLT\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=0\n"
-                                     f"@END{self.label_counter}\n"
+                                     f"@END{self.current_function_name+str(self.label_counter)}\n"
 
 
-                                     f"(FIRST_POS{self.label_counter})\n"
+                                     f"(FIRST_POS{self.current_function_name+str(self.label_counter)})\n"
                                      "@R14\n"
                                      "D=M\n"
-                                     f"@SECOND{self.label_counter}\n"
+                                     f"@SECOND{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JGE\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=-1\n"
-                                     f"@END{self.label_counter}\n"
+                                     f"@END{self.current_function_name+str(self.label_counter)}\n"
 
-                                     f"(SECOND{self.label_counter})\n"
+                                     f"(SECOND{self.current_function_name+str(self.label_counter)})\n"
                                      "@R13\n"
                                      "D=M\n"
                                      "@R14\n"
                                      "D=D-M\n"
-                                     f"@TRUE{self.label_counter}\n"
+                                     f"@TRUE{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JGT\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=0\n"
-                                     f"@END{self.label_counter}\n"
+                                     f"@END{self.current_function_name+str(self.label_counter)}\n"
                                      "0;JMP\n"
 
-                                     f"(TRUE{self.label_counter})\n"
+                                     f"(TRUE{self.current_function_name+str(self.label_counter)})\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=-1\n"
 
-                                     f"(END{self.label_counter})\n")
+                                     f"(END{self.current_function_name+str(self.label_counter)})\n")
             self.label_counter += 1
 
         if command == "lt":
@@ -175,52 +175,52 @@ class CodeWriter:
                                      "D=M\n"
                                      "@R13\n"
                                      "M=D\n"
-                                     f"@FIRST_POS{self.label_counter}\n"
+                                     f"@FIRST_POS{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JGT\n"
 
 
-                                     f"(FIRST_NEG{self.label_counter})\n"
+                                     f"(FIRST_NEG{self.current_function_name+str(self.label_counter)})\n"
                                      "@R14\n"
                                      "D=M\n"
-                                     f"@SECOND{self.label_counter}\n"
+                                     f"@SECOND{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JLT\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=-1\n"
-                                     f"@END{self.label_counter}\n"
+                                     f"@END{self.current_function_name+str(self.label_counter)}\n"
 
 
-                                     f"(FIRST_POS{self.label_counter})\n"
+                                     f"(FIRST_POS{self.current_function_name+str(self.label_counter)})\n"
                                      "@R14\n"
                                      "D=M\n"
-                                     f"@SECOND{self.label_counter}\n"
+                                     f"@SECOND{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JGT\n"
                                      "@SP\n"
                                      "D=M\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=D\n"
-                                     f"@END{self.label_counter}\n"
+                                     f"@END{self.current_function_name+str(self.label_counter)}\n"
 
-                                     f"(SECOND{self.label_counter})\n"
+                                     f"(SECOND{self.current_function_name+str(self.label_counter)})\n"
                                      "@R13\n"
                                      "D=M\n"
                                      "@R14\n"
                                      "D=D-M\n"
-                                     f"@TRUE{self.label_counter}\n"
+                                     f"@TRUE{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JLT\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=0\n"
-                                     f"@END{self.label_counter}\n"
+                                     f"@END{self.current_function_name+str(self.label_counter)}\n"
                                      "0;JMP\n"
 
-                                     f"(TRUE{self.label_counter})\n"
+                                     f"(TRUE{self.current_function_name+str(self.label_counter)})\n"
                                      "@SP\n"
                                      "A=M-1\n"
                                      "M=-1\n"
 
-                                     f"(END{self.label_counter})\n")
+                                     f"(END{self.current_function_name+str(self.label_counter)})\n")
             self.label_counter += 1
 
         if command == "and":
