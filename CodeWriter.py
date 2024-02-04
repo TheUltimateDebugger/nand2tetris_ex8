@@ -130,6 +130,7 @@ class CodeWriter:
                                      "A=M-1\n"
                                      "M=0\n"
                                      f"@END{self.current_function_name+str(self.label_counter)}\n"
+                                     f"0;JMP\n"
 
 
                                      f"(FIRST_POS{self.current_function_name+str(self.label_counter)})\n"
@@ -141,6 +142,7 @@ class CodeWriter:
                                      "A=M-1\n"
                                      "M=-1\n"
                                      f"@END{self.current_function_name+str(self.label_counter)}\n"
+                                     f"0;JMP\n"
 
                                      f"(SECOND{self.current_function_name+str(self.label_counter)})\n"
                                      "@R13\n"
@@ -162,6 +164,14 @@ class CodeWriter:
 
                                      f"(END{self.current_function_name+str(self.label_counter)})\n")
             self.label_counter += 1
+        if command == "shiftleft":
+            self.output_stream.write("@SP\n"
+                                     "A=M-1\n"
+                                     "M=M<<\n")
+        if command == "shiftright":
+            self.output_stream.write("@SP\n"
+                                     "A=M-1\n"
+                                     "M=M>>\n")
 
         if command == "lt":
             self.output_stream.write("@SP\n"
@@ -188,6 +198,7 @@ class CodeWriter:
                                      "A=M-1\n"
                                      "M=-1\n"
                                      f"@END{self.current_function_name+str(self.label_counter)}\n"
+                                     f"0;JMP\n"
 
 
                                      f"(FIRST_POS{self.current_function_name+str(self.label_counter)})\n"
@@ -196,11 +207,10 @@ class CodeWriter:
                                      f"@SECOND{self.current_function_name+str(self.label_counter)}\n"
                                      "D;JGT\n"
                                      "@SP\n"
-                                     "D=M\n"
-                                     "@SP\n"
                                      "A=M-1\n"
-                                     "M=D\n"
+                                     "M=0\n"
                                      f"@END{self.current_function_name+str(self.label_counter)}\n"
+                                     f"0;JMP\n"
 
                                      f"(SECOND{self.current_function_name+str(self.label_counter)})\n"
                                      "@R13\n"
@@ -245,13 +255,6 @@ class CodeWriter:
             self.output_stream.write("@SP\n"
                                      "A=M-1\n"
                                      "M=!M\n")
-        if command == "gt":
-            self.output_stream.write("@SP\n"
-                                     "A=M-1\n"
-                                     "D=M\n"
-                                     "@R13\n"
-                                     "M=D"
-                                     )
 
     def write_push_pop(self, command: str, segment: str, index: int) -> None:
         """Writes assembly code that is the translation of the given 
@@ -289,7 +292,8 @@ class CodeWriter:
                     self.output_stream.write("@THIS\n"
                                              "M=D\n")
                 else:
-                    self.output_stream.write("ERROR!\n")
+                    self.output_stream.write(f"@R{3+index}\n"
+                                             f"M=D\n")
 
             if segment == "local":
                 self.output_stream.write("@LCL\n"
@@ -369,7 +373,8 @@ class CodeWriter:
                     self.output_stream.write("@THIS\n"
                                              "D=M\n")
                 else:
-                    self.output_stream.write("ERROR!\n")
+                    self.output_stream.write(f"@R{3 + index}\n"
+                                             f"D=M\n")
 
             if segment == "local":
                 self.output_stream.write("@LCL\n"

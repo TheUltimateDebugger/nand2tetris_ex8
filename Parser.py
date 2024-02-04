@@ -99,7 +99,7 @@ class Parser:
         """
         # Your code goes here!
         first_arg = self.new_input_lines[self.current_line].split()[0]
-        arithmetic = ["add", "sub", "neg", "eq", "gt", "lt", "and", "or", "not"]
+        arithmetic = ["add", "sub", "neg", "eq", "gt", "lt", "and", "or", "not", "shiftright", "shiftleft"]
         if first_arg in arithmetic:
             return "C_ARITHMETIC"
         elif first_arg == "push":
